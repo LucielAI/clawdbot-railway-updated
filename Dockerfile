@@ -33,11 +33,7 @@ RUN set -eux; \
     sed -i -E 's/"openclaw"[[:space:]]*:[[:space:]]*"workspace:[^"]+"/"openclaw": "*"/g' "$f"; \
   done
 
-# Patch: disable minimumReleaseAge to prevent build failures when upstream
-# depends on recently-published packages.
-RUN sed -i '/minimumReleaseAge/d' .npmrc 2>/dev/null || true
-
-RUN pnpm install --no-frozen-lockfile
+RUN pnpm install --no-frozen-lockfile --config.minimum-release-age=0
 RUN pnpm build
 ENV OPENCLAW_PREFER_PNPM=1
 RUN pnpm ui:install && pnpm ui:build
